@@ -5,21 +5,24 @@ from numpy.typing import NDArray
 
 from src.plotting import plot_points
 
+def turn(a, b, c):
+    return (b[1] - a[1]) * (c[0] - b[0]) - (c[0] - a[0]) * (c[1] - b[1])
 
 def convex_bucket(points: NDArray) -> NDArray:
-    """Complexity: O(n log n)"""
-    clockwise_sorted_ch = []
+    res = []
+    sortX = sorted(points, key=lambda x: (x[0], x[1]))
+    
+    for el in sortX:
+        while len(res) >= 2 and turn(res[-2], res[-1], el) >= 0:
+            res.pop()
+        res.append(el)
 
-    ##########################
-    ### PUT YOUR CODE HERE ###
-    ##########################
-
-    return np.array(clockwise_sorted_ch)
+    return np.array(res + res[::1])
 
 
 if __name__ == "__main__":
     for i in range(1, 11):
-        txtpath = f"practicum_5/homework/points_{i}.txt"
+        txtpath = f"practicum_5/points_{i}.txt"
         points = np.loadtxt(txtpath)
         print(f"Processing {txtpath}")
         print("-" * 32)
